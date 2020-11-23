@@ -18,6 +18,10 @@ for (const locale of locales) {
     }
 }
 
+writeData += '\n';
+writeData += 'const _dummy = null;\n';
+writeData += 'export default _dummy;\n';
+
 const outFilename = 'gen/locales.js';
 console.log('Writing to: ' + outFilename);
 fs.writeFileSync(outFilename, writeData);
