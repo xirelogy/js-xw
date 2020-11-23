@@ -1,0 +1,25 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "sourceType": "module",
+  "source": {
+    "include": ["index.js", "./src"],
+    "exclude": ["./src/config", "./src/internals"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\\\/|\\\\\\\\)_"
+  },
+  "templates": {
+    "default": {
+      "outputSourceFiles": false
+    },
+    "cleverLinks": false,
+    "linenums": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "./docs/",
+    "recurse": true
+  }
+}

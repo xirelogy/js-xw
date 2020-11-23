@@ -1,0 +1,12 @@
+/dist
+/docs
+package-lock.json
+
+node_modules/
+
+.idea
+.project
+.npm
+
+.DS_Store
+Thumbs.db

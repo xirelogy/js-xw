@@ -1,0 +1,31 @@
+{
+  "name": "@xirelogy/xw",
+  "version": "0.9.0",
+  "description": "XW Javascript Framework",
+  "main": "index.js",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "test": "echo \"No test specified\"",
+    "build": "cross-env NODE_ENV=production grunt build"
+  },
+  "keywords": [
+    "XW",
+    "frontend",
+    "framework"
+  ],
+  "author": "JingXiang Tou",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "grunt": "^1.3.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-webpack": "^4.0.2",
+    "load-grunt-tasks": "^5.1.0",
+    "webpack": "^4.0.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.12.5"
+  }
+}
