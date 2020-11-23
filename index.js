@@ -41,7 +41,7 @@ import _dummyGenLocales from "./gen/locales";
  * Module definition
  * @namespace module
  */
-const module = {
+const mod = {
     /**
      * The static main interface
      * @type Xw
@@ -133,4 +133,4 @@ const module = {
     },
 };
 
-export default module;
+export default mod;
