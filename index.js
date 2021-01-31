@@ -2,6 +2,7 @@ import appSetup from "./src/XwAppSetup";
 import axw from "./src/XwAsync";
 import bookmarkPersist from "./src/XwBookmarkPersist";
 import bookmarkStore from "./src/XwBookmarkStore";
+import elems from "./src/XwElems";
 import i18n from "./src/XwI18n";
 import i18nSetup from "./src/XwI18nSetup";
 import logger from "./src/XwLogger";
@@ -110,6 +111,11 @@ const mod = {
      * @type XwUrlBase64
      */
     urlBase64: urlBase64,
+    /**
+     * HTML element related utilities
+     * @type XwElems
+     */
+    elems: elems,
     /**
      * XHR related functionalities
      * @namespace module.Xhr

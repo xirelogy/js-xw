@@ -28,6 +28,7 @@
     "webpack": "^4.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.12.5"
+    "@babel/runtime": "^7.12.5",
+    "blueimp-md5": "^2.18.0"
   }
 }
