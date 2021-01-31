@@ -6,6 +6,22 @@ const _l = i18n.init('Xw');
 
 
 /**
+ * Custom CSS style sheet
+ * @type {CSSStyleSheet|null}
+ * @private
+ */
+let _customCss = null;
+
+
+/**
+ * Custom CSS names inserted
+ * @type {object}
+ * @private
+ */
+let _customCssNames = {};
+
+
+/**
  * Common functionalities for the XW javascript frontend framework
  * @class
  * @hideconstructor
@@ -252,6 +268,36 @@ class Xw {
 
             document.getElementsByTagName('head')[0].appendChild(scriptElement);
         });
+    }
+
+
+    /**
+     * Access to custom CSS
+     * @return {CSSStyleSheet}
+     */
+    getCustomCss() {
+        if (_customCss !== null) return _customCss;
+
+        const style = document.createElement('style');
+        style.appendChild(document.createTextNode(''));
+        document.head.appendChild(style);
+
+        _customCss = style.sheet;
+        return _customCss;
+    }
+
+
+    /**
+     * Insert a custom CSS (if not already inserted)
+     * @param {string} name
+     * @param {string} rule
+     */
+    insertCustomCss(name, rule) {
+        if (this.isDefined(_customCssNames[name])) return;
+
+        const customCss = this.getCustomCss();
+        customCss.insertRule(rule);
+        _customCssNames[name] = rule;
     }
 }
 
