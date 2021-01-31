@@ -1,5 +1,8 @@
 import xw from "./Xw";
+import i18n from "./XwI18n";
 import md5 from "blueimp-md5"
+
+const _l = i18n.init('XwElems');
 
 
 /**
@@ -103,7 +106,7 @@ async function _cssAnimate(element, propSpecs, options) {
         // Listen to events
         _element.addEventListener('animationcancel', () => {
             cleanupFn();
-            reject(new Error('Animation cancelled'));
+            reject(new Error(_l('Animation cancelled')));
         }, true);
         _element.addEventListener('animationend', () => {
             cleanupFn();
@@ -188,7 +191,7 @@ class XwElems {
             const anim = _element.animate(keyframes, outOptions);
 
             anim.oncancel = (ev) => {
-                reject(new Error('Animation cancelled'));
+                reject(new Error(_l('Animation cancelled')));
             };
             anim.onfinish = (ev) => {
                 for (const prop in toState) {
