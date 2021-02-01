@@ -157,16 +157,9 @@ class XwXhrRequest {
                 reject(new XwXhrNetworkError(xhr));
             };
 
-            // Prepare the payload
-            let payload = null;
-
-            // Accept all headers
-            for (const headerName in this.headers) {
-                if (!this.headers.hasOwnProperty(headerName)) continue;
-                xhr.setRequestHeader(headerName, this.headers[headerName]);
-            }
-
+            // Prepare the request and process the payload
             let _url = this.url;
+            let payload = null;
 
             // Process the data
             switch (this.method) {
@@ -191,9 +184,11 @@ class XwXhrRequest {
                             _url += encodeURIComponent(this.data[key]);
                         }
                     }
+                    xhr.open(this.method, _url, true);
                     break;
 
                 case METHOD_POST:
+                    xhr.open(this.method, _url, true);
                     if (this.data !== null) {
                         if (this.data instanceof XwXhrPostContent) {
                             payload = this.data.getPayload();
@@ -214,9 +209,16 @@ class XwXhrRequest {
                     throw new XwUnsupportedError(this.method, _l('request method'));
             }
 
-            // Prepare and send the request
+            // Start the request
             _d.isRunning = true;
-            xhr.open(this.method, _url, true);
+
+            // Accept all headers
+            for (const headerName in this.headers) {
+                if (!this.headers.hasOwnProperty(headerName)) continue;
+                xhr.setRequestHeader(headerName, this.headers[headerName]);
+            }
+
+            // Send the request
             xhr.send(payload);
         });
     }
