@@ -130,7 +130,7 @@ class XwXhrRequest {
                 // Handle HTTP status error
                 if (!this.ignoreHttpError && xhr.status >= 400) {
                     _d.isRunning = false;
-                    reject(new XwXhrHttpError(xhr, xhr.status, xhr.statusText));
+                    reject(new XwXhrHttpError(xhr, xhr.status, xhr.statusText, response));
                     return;
                 }
 
