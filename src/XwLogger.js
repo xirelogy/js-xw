@@ -16,6 +16,15 @@ let _sink = new XwLoggerSink();
  */
 class XwLogger {
     /**
+     * Set logger sink
+     * @param {XwLoggerSink} sink
+     */
+    setSink(sink) {
+        _sink = sink;
+    }
+
+
+    /**
      * Sink of console.log()
      * @param {...*} messages
      */
