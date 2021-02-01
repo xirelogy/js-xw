@@ -132,6 +132,25 @@ async function _cssAnimate(element, propSpecs, options) {
 
 class XwDoms {
     /**
+     * Show the target element
+     * @param {HTMLElement} element Element to be shown
+     * @param {string} [displayType] Display type to be shown, default to 'block'
+     */
+    show(element, displayType) {
+        element.style.display = xw.defaultable(displayType, 'block');
+    }
+
+
+    /**
+     * Hide the target element
+     * @param {HTMLElement} element Element to be shown
+     */
+    hide(element) {
+        element.style.display = 'none';
+    }
+
+
+    /**
      * Run animation
      * @param {HTMLElement} element Element to be animated
      * @param {object} propSpecs CSS properties to be animated
