@@ -26,6 +26,7 @@ import XwTimeoutError from "./src/XwTimeoutError";
 import XwUnsupportedError from "./src/XwUnsupportedError";
 import XwXhrAbortedError from "./src/XwXhrAbortedError";
 import XwXhrError from "./src/XwXhrError";
+import XwXhrHttpError from "./src/XwXhrHttpError";
 import XwXhrJsonParseResponse from "./src/XwXhrJsonParseResponse";
 import XwXhrJsonPostContent from "./src/XwXhrJsonPostContent";
 import XwXhrNetworkError from "./src/XwXhrNetworkError";
@@ -128,6 +129,7 @@ const mod = {
         $: xhr,
         AbortedError: XwXhrAbortedError,
         Error: XwXhrError,
+        HttpError: XwXhrHttpError,
         JsonParseResponse: XwXhrJsonParseResponse,
         JsonPostContent: XwXhrJsonPostContent,
         NetworkError: XwXhrNetworkError,
