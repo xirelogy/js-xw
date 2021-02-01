@@ -2,7 +2,7 @@ import xw from "./Xw";
 import i18n from "./XwI18n";
 import md5 from "blueimp-md5"
 
-const _l = i18n.init('XwElems');
+const _l = i18n.init('XwDoms');
 
 
 /**
@@ -130,7 +130,7 @@ async function _cssAnimate(element, propSpecs, options) {
 }
 
 
-class XwElems {
+class XwDoms {
     /**
      * Run animation
      * @param {HTMLElement} element Element to be animated
@@ -215,5 +215,5 @@ class XwElems {
 }
 
 
-const elems = new XwElems();
-export default elems;
+const doms = new XwDoms();
+export default doms;
