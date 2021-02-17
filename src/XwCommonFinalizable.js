@@ -61,7 +61,7 @@ class XwCommonFinalizable extends XwFinalizable {
         _d.onAsyncFinal = xw.defaultable(_args.onAsyncFinal);
         _d.isFinal = false;
 
-        if (_d.onFinal === null || _d.onAsyncFinal === null) {
+        if (_d.onFinal === null && _d.onAsyncFinal === null) {
             throw new XwInvalidDataError();
         }
 
