@@ -5,7 +5,6 @@ import XwInvalidDataError from "./XwInvalidDataError";
 import XwInvalidStateError from "./XwInvalidStateError";
 import XwUnsupportedError from "./XwUnsupportedError";
 import XwXhrPostContent from "./XwXhrPostContent";
-import XwXhrParseResponse from "./XwXhrParseResponse";
 import XwXhrHttpError from "./XwXhrHttpError";
 import XwXhrTimeoutError from "./XwXhrTimeoutError";
 import XwXhrAbortedError from "./XwXhrAbortedError";
