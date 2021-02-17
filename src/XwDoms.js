@@ -130,6 +130,11 @@ async function _cssAnimate(element, propSpecs, options) {
 }
 
 
+/**
+ * DOM related utilities
+ * @class
+ * @alias module.Doms
+ */
 class XwDoms {
     /**
      * Show the target element
