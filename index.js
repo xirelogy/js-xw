@@ -15,6 +15,10 @@ import XwCommonFinalizable from "./src/XwCommonFinalizable";
 import XwEventListenerHandle from "./src/XwEventListenerHandle";
 import XwEventListeners from "./src/XwEventListeners";
 import XwFinalizable from "./src/XwFinalizable";
+import XwInteracts from "./src/XwInteracts";
+import XwInteractsCodec from "./src/XwInteractsCodec";
+import XwInteractsListener from "./src/XwInteractsListener";
+import XwInteractsState from "./src/XwInteractsState";
 import XwInvalidDataError from "./src/XwInvalidDataError";
 import XwInvalidStateError from "./src/XwInvalidStateError";
 import XwLoggerSink from "./src/XwLoggerSink";
@@ -53,6 +57,10 @@ const mod = {
     EventListenerHandle: XwEventListenerHandle,
     EventListeners: XwEventListeners,
     Finalizable: XwFinalizable,
+    Interacts: XwInteracts,
+    InteractsCodec: XwInteractsCodec,
+    InteractsListener: XwInteractsListener,
+    InteractsState: XwInteractsState,
     InvalidDataError: XwInvalidDataError,
     InvalidStateError: XwInvalidStateError,
     LoggerSink: XwLoggerSink,

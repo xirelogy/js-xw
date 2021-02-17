@@ -1,0 +1,10 @@
+{
+  "onValidate must be a function": "onValidate必须为函数",
+  "onFormat must be a function": "onFormat必须为函数",
+  "controlListen must be a function": "controlListen必须为函数",
+  "controlGet must be a function": "controlGet必须为函数",
+  "controlSet must be a function": "controlSet必须为函数",
+  "onCalculate must be a function": "onCalculate必须为函数",
+  "variable watch specification": "变量监听设置",
+  "": ""
+}
