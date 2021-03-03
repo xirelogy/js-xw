@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
-    "blueimp-md5": "^2.18.0"
+    "blueimp-md5": "^2.18.0",
+    "escape-html": "^1.0.3"
   }
 }

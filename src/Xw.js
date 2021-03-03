@@ -1,6 +1,7 @@
 import i18n from "./XwI18n"
 import random from "./XwRandom";
 import XwTimeoutError from "./XwTimeoutError";
+import escapeHtmlFromLib from 'escape-html';
 
 const _l = i18n.init('Xw');
 
@@ -154,6 +155,16 @@ class Xw {
         if (!matched) return _defaultValue;
 
         return matched.pop();
+    }
+
+
+    /**
+     * Escape text to be HTML safe
+     * @param {string} value Text value to be escaped
+     * @return {string} Text after escaped
+     */
+    escapeHtml(value) {
+        return escapeHtmlFromLib(value);
     }
 
 
