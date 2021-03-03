@@ -1,3 +1,4 @@
+import axw from "./XwAsync";
 import i18n from "./XwI18n";
 import xw from "./Xw";
 import PrivateProperties from "./internals/_privates";
@@ -12,11 +13,12 @@ const _l = i18n.init('XwInteracts');
 /**
  * @typedef XwInteracts_Data
  * @property {object} vars Variables bag
- * @property {object[]} controls List of controls
+ * @property {XwInteracts_ControlDesc[]} descs List of control descriptors
  * @property {object} watches Variables to be watched
  * @property {string} currentEventScene Current event scene
  * @property {*|null} currentEventData Current associated data
  * @property {function(HTMLElement|null,Error|null):void|null} onValidated Handler for validation completed
+ * @property {function(HTMLElement|null):(HTMLElement|null)|null} onEnter Handler for enter helper
  * @private
  */
 
@@ -26,11 +28,12 @@ const _l = i18n.init('XwInteracts');
  */
 const _init = {
     vars: null,
-    controls: [],
+    descs: [],
     watches: {},
     currentEventScene: '',
     currentEventData: null,
     onValidated: null,
+    onEnter: null,
 };
 
 
@@ -126,20 +129,24 @@ function defaultControlSet(control, value) {
  * Perform validation
  * @param {XwInteracts_Data} d Private data
  * @param {XwInteracts_ControlDesc|null} desc Target control's descriptor
+ * @param {function(any):void} [onValidated=null] Specific validated receiver
  */
-function onValidate(d, desc) {
+function onValidate(d, desc, onValidated) {
 
     if (desc === null) return;
+
+    const _onValidated = xw.defaultable(onValidated, (payload) => {
+        if (d.onValidated !== null) {
+            d.onValidated(desc.control, payload);
+        }
+    });
 
     let value = null;
 
     try {
         const state = new XwInteracts_RunState(d.currentEventScene, d.currentEventData);
         value = desc.onValidate(desc.controlGet(desc.control), state);
-
-        if (d.onValidated !== null) {
-            d.onValidated(desc.control, null);
-        }
+        _onValidated(null);
 
         if (value !== null && state.isForceFormat) {
             const formatted = desc.onFormat(value, state);
@@ -148,14 +155,34 @@ function onValidate(d, desc) {
             }
         }
     } catch (e) {
-        if (d.onValidated !== null) {
-            d.onValidated(desc.control, e);
-        }
+        _onValidated(e);
         value = null;
     }
 
     if (desc.name) {
         watchNotify(d, desc.name, value);
+    }
+}
+
+
+/**
+ * Handle control's key-up event
+ * @param {XwInteracts_Data} d Private data
+ * @param {XwInteracts_ControlDesc} desc Target control's descriptor
+ * @param {Event} ev Event object
+ */
+function onCommonKeyUpEvent(d, desc, ev) {
+    if (!xw.isDefined(ev.keyCode)) return;
+    switch (ev.keyCode) {
+        case 13:
+            if (d.onEnter !== null) {
+                const nextControl = d.onEnter(desc.control);
+                if (nextControl !== null) nextControl.focus();
+            }
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -436,6 +463,10 @@ class XwInteracts {
         if (_control !== null) {
             const listener = new XwInteracts_RunListener(_d, desc);
             _controlListen(_control, listener);
+
+            _control.addEventListener('keyup', async (ev) => {
+                onCommonKeyUpEvent(_d, desc, ev);
+            });
         }
 
         if (_name !== null) {
@@ -453,7 +484,7 @@ class XwInteracts {
             });
         }
 
-        _d.controls.push(desc);
+        _d.descs.push(desc);
 
         for (const watch of _watches) {
             watchSubscribe(_d, watch, desc);
@@ -512,6 +543,26 @@ class XwInteracts {
          */
         const _d = _p.access(this);
         _d.onValidated = fn;
+    }
+
+
+    /**
+     * Enable helper to process the 'enter' key as an inteligent tab shortcut
+     * @param {function(HTMLElement|null):(HTMLElement|null)} fn Handler to select enter control
+     */
+    enableEnterHelper(fn) {
+        /**
+         * @type {XwInteracts_Data}
+         * @private
+         */
+        const _d = _p.access(this);
+        _d.onEnter = xw.requires(fn);
+
+        // Also automatically focus
+        axw.fork(() => {
+            const nextControl = fn(null);
+            if (nextControl !== null) nextControl.focus();
+        });
     }
 }
 
