@@ -156,6 +156,16 @@ class XwDoms {
 
 
     /**
+     * If target element is shown
+     * @param {HTMLElement} element Target element
+     * @return {boolean}
+     */
+    isShown(element) {
+        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+    }
+
+
+    /**
      * Run animation
      * @param {HTMLElement} element Element to be animated
      * @param {object} propSpecs CSS properties to be animated
