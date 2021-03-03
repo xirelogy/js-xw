@@ -1,7 +1,9 @@
 import i18n from "./XwI18n"
 import random from "./XwRandom";
 import XwTimeoutError from "./XwTimeoutError";
+import XwInvalidDataError from "./XwInvalidDataError";
 import escapeHtmlFromLib from 'escape-html';
+import jsCookieLib from 'js-cookie';
 
 const _l = i18n.init('Xw');
 
@@ -151,10 +153,61 @@ class Xw {
     readCookie(key, defaultValue) {
         const _key = this.requires(key);
         const _defaultValue = this.defaultable(defaultValue, null);
-        const matched = document.cookie.match('(^|;)\\s*' + encodeURIComponent(_key) + '\\s*=\\s*([^;]+)');
-        if (!matched) return _defaultValue;
 
-        return matched.pop();
+        return jsCookieLib.get(_key) || _defaultValue;
+    }
+
+
+    /**
+     * Set a cookie with given key and value
+     * @param {string} key The cookie key
+     * @param {string} value The cookie value
+     * @param {object} [options] Relevant options
+     * @param {string} [options.path] The path to set the cookie
+     * @param {string} [options.domain] The domain to set the cookie
+     * @param {Date|number} [options.expires] When the cookie will expire / number of seconds until expires
+     * @param {boolean} [options.secure] If the cookie must be secured
+     * @param {string} [options.sameSite] Same site options ('lax', 'strict', 'none')
+     */
+    writeCookie(key, value, options) {
+        const _key = this.requires(key);
+        const _value = this.requires(value);
+
+        const _options = this.defaultable(options, {});
+        const _optionsPath = this.defaultable(_options.path);
+        const _optionsDomain = this.defaultable(_options.domain);
+        const _optionsExpires = this.defaultable(_options.expires);
+        const _optionsSecure = this.defaultable(_options.secure, false);
+        const _optionsSameSite = this.defaultable(_options.sameSite);
+
+        const setOptions = {};
+        if (_optionsPath !== null) setOptions.path = _optionsPath;
+        if (_optionsDomain !== null) setOptions.domain = _optionsDomain;
+        if (_optionsSecure) setOptions.secure = true;
+        if (_optionsSameSite !== null) setOptions.sameSite = _optionsSameSite;
+
+        if (_optionsExpires !== null) {
+            if (typeof _optionsExpires === 'number') {
+                const newExpires = new Date(Date.now() + (_optionsExpires * 1000));
+                setOptions.expires = newExpires;
+            } else if (_optionsExpires instanceof Date) {
+                setOptions.expires = _optionsExpires;
+            } else {
+                throw new XwInvalidDataError();
+            }
+        }
+
+        jsCookieLib.set(_key, _value, setOptions);
+    }
+
+
+    /**
+     * Delete a cookie with the given key
+     * @param {string} key The cookie key
+     */
+    deleteCookie(key) {
+        const _key = this.requires(key);
+        jsCookieLib.remove(_key);
     }
 
 
