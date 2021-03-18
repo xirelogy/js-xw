@@ -11,6 +11,19 @@ const _l = i18n.init('XwInteracts');
 
 
 /**
+ * Control kind
+ * @type {string}
+ */
+const KIND_CONTROL = 'control';
+
+/**
+ * Calculation kind
+ * @type {string}
+ */
+const KIND_CALCULATE = 'calculate';
+
+
+/**
  * @typedef XwInteracts_Data
  * @property {object} vars Variables bag
  * @property {XwInteracts_ControlDesc[]} descs List of control descriptors
@@ -309,6 +322,8 @@ class XwInteracts_RunState extends XwInteractsState {
                         return true;
                     case 'watch':
                         return true;
+                    case 'recalculate':
+                        return true;
                     default:
                         return false;
                 }
@@ -414,6 +429,7 @@ class XwInteracts {
         const _controlGet = xw.defaultable(_options.controlGet, defaultControlGet);
         const _controlSet = xw.defaultable(_options.controlSet, defaultControlSet);
         const _watches = getWatches(xw.defaultable(_options.watch));
+        const _kind = xw.defaultable(_options.kind, KIND_CONTROL);  // Hidden options
 
         if (_codec !== null) {
             _onValidate = (value, state) => {
@@ -440,6 +456,7 @@ class XwInteracts {
          * @typedef XwInteracts_ControlDesc
          * @property {HTMLElement|null} control Target control, if any
          * @property {string|null} name Variable name of the control, if any
+         * @property {string} kind Control kind
          * @property {function(*, XwInteractsState): *} onValidate Validator function
          * @property {function(*, XwInteractsState): *} onFormat Formatter function
          * @property {function(HTMLElement): *} controlGet Getter function
@@ -454,6 +471,7 @@ class XwInteracts {
         const desc = {
             control: _control,
             name: _name,
+            kind: _kind,
             onValidate: _onValidate,
             onFormat: _onFormat,
             controlGet: _controlGet,
@@ -521,6 +539,11 @@ class XwInteracts {
         if (_onCalculate !== null) {
             outOptions.controlSet = (control, value) => {
                 _onCalculate(value);
+                if (_name !== null) watchNotify(_d, _name, value);
+            };
+        } else {
+            outOptions.controlSet = (control, value) => {
+                if (_name !== null) watchNotify(_d, _name, value);
             };
         }
 
@@ -528,6 +551,7 @@ class XwInteracts {
             outOptions.watch = _watch;
         }
 
+        outOptions.kind = KIND_CALCULATE;
         this.bindControl(null, _name, outOptions);
     }
 
@@ -563,6 +587,45 @@ class XwInteracts {
             const nextControl = fn(null);
             if (nextControl !== null) nextControl.focus();
         });
+    }
+
+
+    /**
+     * Manually trigger all calculation to be re-evaluated
+     */
+    recalculate() {
+        /**
+         * @type {XwInteracts_Data}
+         * @private
+         */
+        const _d = _p.access(this);
+
+        const handle = new XwCommonFinalizable({
+            data: {
+                lastScene: null,
+                lastData: null,
+            },
+            onInit: data => {
+                data.lastScene = _d.currentEventScene;
+                data.lastData = _d.currentEventData;
+                _d.currentEventScene = 'recalculate';
+                _d.currentEventData = null;
+            },
+            onFinal: data => {
+                _d.currentEventScene = data.lastScene;
+                _d.currentEventData = data.lastData;
+            }
+        });
+
+        try {
+            for (const desc of _d.descs) {
+                /* @var {XwInteracts_ControlDesc} desc */
+                if (desc.kind != KIND_CALCULATE) continue;
+                onValidate(_d, desc);
+            }
+        } finally {
+            handle.final();
+        }
     }
 }
 
