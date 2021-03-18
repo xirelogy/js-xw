@@ -1,0 +1,10 @@
+{
+  "onValidate must be a function": "onValidate必須為函數",
+  "onFormat must be a function": "onFormat必須為函數",
+  "controlListen must be a function": "controlListen必須為函數",
+  "controlGet must be a function": "controlGet必須為函數",
+  "controlSet must be a function": "controlSet必須為函數",
+  "onCalculate must be a function": "onCalculate必須為函數",
+  "variable watch specification": "變量監聽設置",
+  "": ""
+}
