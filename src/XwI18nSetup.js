@@ -35,6 +35,26 @@ class XwI18nSetup {
 
     /**
      * @methodOf XwI18nSetup
+     * Check if locale definition for given class and locale exist
+     * @param {string|null} className Class name or namespace for the localization
+     * @param {string} locale Locale code
+     * @return {boolean}
+     */
+    isDefined(className, locale) {
+
+        const __d = _d();
+        if (!__d.classMap.has(className)) return false;
+
+        const _classLocales = __d.classMap.get(className);
+        if (!_classLocales.has(locale)) return false;
+
+        return true;
+    }
+
+
+    /**
+     * @methodOf XwI18nSetup
+     * Specify locale definition for given class and locale
      * @param {string|null} className Class name or namespace for the localization
      * @param {string} locale Locale code
      * @param {Object<string, string>} definitions A key value map for the translations
@@ -83,6 +103,9 @@ class XwI18nSetup {
     async autoload(className, locale) {
         const fn = xw.defaultable(_d().autoloadRuleFn);
         if (fn === null) throw new Error('No autoload defined');
+
+        // Do not load again if already defined
+        if (this.isDefined(className, locale)) return;
 
         const src = fn(className, locale);
         const data = await xw.loadJsonp(src);
