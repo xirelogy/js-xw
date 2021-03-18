@@ -25,6 +25,16 @@ let _customCssNames = {};
 
 
 /**
+ * Function to create random ID
+ * @type {function():string}
+ * @private
+ */
+let _onRandomId = function() {
+    return 'anon-' + random.lowerAlphanumString(12);
+};
+
+
+/**
  * Common functionalities for the XW javascript frontend framework
  * @class
  * @hideconstructor
@@ -47,6 +57,57 @@ class Xw {
         }
 
         return ret;
+    }
+
+
+    /**
+     * Deep clone element (like a template)
+     * @param {HTMLElement} elem Element to be cloned
+     * @return {HTMLElement}
+     */
+    elementClone(elem) {
+
+        const _elem = this.requires(elem);
+        const clonedElem = _elem.cloneNode(true);
+        clonedElem.id = this.randomId();
+        return clonedElem;
+    }
+
+
+    /**
+     * Create a new random ID
+     * @return {string} The randomly created ID
+     */
+    randomId() {
+        return _onRandomId();
+    }
+
+
+    /**
+     * Set function to generate a new random ID
+     * @param {function():string} fn Generator function
+     */
+    onRandomId(fn) {
+        _onRandomId = fn;
+    }
+
+
+    /**
+     * Transfer options from source to target, if available
+     * @param {object} source Source object
+     * @param {object} target Target object
+     * @param {string} key Key name
+     * @param {string} [renameKey]
+     */
+    optionsTransfer(source, target, key, renameKey) {
+        const _source = this.requires(source);
+        const _target = this.requires(target);
+        const _key = this.requires(key);
+        const _renameKey = this.defaultable(renameKey, _key);
+
+        if (!this.isDefined(_source[_key])) return;
+
+        _target[_renameKey] = _source[_key];
     }
 
 
