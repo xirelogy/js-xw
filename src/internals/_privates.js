@@ -67,7 +67,10 @@ export default class PrivateProperties {
             Object.defineProperty(accessor, key, {
                 enumerable: true,
                 get() {
-                    if (!bagMap.has(parent)) bagMap.set(parent, defaultValue);
+                    if (!bagMap.has(parent)) {
+                        const value = JSON.parse(JSON.stringify(defaultValue));
+                        bagMap.set(parent, value);
+                    }
                     return bagMap.get(parent);
                 },
                 set(value) {
