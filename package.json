@@ -6,7 +6,8 @@
   "files": [
     "src/*",
     "gen/*",
-    "locales/*"
+    "locales/*",
+    "scripts/*"
   ],
   "scripts": {
     "test": "echo \"No test specified\"",
