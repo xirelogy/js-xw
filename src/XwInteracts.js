@@ -490,8 +490,12 @@ class XwInteracts {
         if (_name !== null) {
             Object.defineProperty(_d.vars, _name, {
                 get: function() {
-                    const state = new XwInteracts_RunState(_d.currentEventScene, _d.currentEventData);
-                    return desc.onValidate(desc.controlGet(_control), state);
+                    try {
+                        const state = new XwInteracts_RunState(_d.currentEventScene, _d.currentEventData);
+                        return desc.onValidate(desc.controlGet(_control), state);
+                    } catch (e) {
+                        return undefined;
+                    }
                 },
                 set: function(value) {
                     const state = new XwInteracts_RunState(_d.currentEventScene, _d.currentEventData);
