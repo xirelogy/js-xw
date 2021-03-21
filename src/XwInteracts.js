@@ -530,6 +530,12 @@ class XwInteracts {
             throw new Error(_l('onCalculate must be a function'));
         }
 
+        /**
+         * @type {XwInteracts_Data}
+         * @private
+         */
+        const _d = _p.access(this);
+
         const outOptions = {};
 
         outOptions.controlGet = control => {
