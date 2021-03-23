@@ -28,6 +28,7 @@ class XwStrings {
      *         empty string.
      */
     isEmpty(v) {
+        if (!xw.isDefined(v)) return true;
         const _v = xw.requires(v);
         if (v === null) return true;
         if (this.trim(v) === '') return true;
