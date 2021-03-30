@@ -112,6 +112,20 @@ class Xw {
 
 
     /**
+     * Convert any value iterables to array
+     * @param {Iterator<*>|Iterable<*>|*[]} iterable Input value
+     * @return {*[]}
+     */
+    toArray(iterable) {
+        const ret = [];
+        for (const v of iterable) {
+            ret.push(v);
+        }
+        return ret;
+    }
+
+
+    /**
      * Flatten an item, normally for debugging display purpose
      * @param {*} v Value to be flatten
      * @return {*}
