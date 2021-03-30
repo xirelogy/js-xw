@@ -1,6 +1,7 @@
 import xw from "./Xw";
 import i18n from "./XwI18n";
 import md5 from "blueimp-md5"
+import ClipboardJS from "clipboard";
 
 const _l = i18n.init('XwDoms');
 
@@ -244,6 +245,59 @@ class XwDoms {
 
             // Run the animation
             anim.play();
+        });
+    }
+
+
+    /**
+     * Bind an element's click action to cause clipboard interaction
+     * @param {HTMLElement} element Element to be binded
+     * @param {object} [options] Clipboard options
+     * @param {HTMLElement} [options.target] Target element to be copied from
+     * @param {string} [options.text] Text to be copied
+     * @param {function(Event):void} [options.onClipboard] Handler for clipboard action
+     */
+    clickToClipboard(element, options) {
+
+        const _element = xw.requires(element);
+        const _options = xw.defaultable(options, {});
+        const _optionsOnClipboard = xw.defaultable(_options.onClipboard);
+
+        const _data = {};
+
+        // Text provider
+        if (xw.isDefined(_options.text)) {
+            _data.text = (trigger) => {
+                return _options.text;
+            }
+        }
+
+        // Target provider
+        if (xw.isDefined(_options.target)) {
+            _data.target = (trigger) => {
+                return _options.target;
+            }
+        }
+
+        // Create object
+        const cb = new ClipboardJS(_element, _data);
+
+        // Bind event handlers
+        const _onClipboard = (isSuccess, ev) => {
+            if (_optionsOnClipboard === null) return;
+
+            const newEv = new CustomEvent('clipboard');
+            newEv.isSuccess = isSuccess;
+            newEv.srcEv = ev;
+            _optionsOnClipboard(newEv);
+        };
+
+        cb.on('success', (ev) => {
+            _onClipboard(true, ev);
+        });
+
+        cb.on('error', (ev) => {
+            _onClipboard(false, ev);
         });
     }
 }
