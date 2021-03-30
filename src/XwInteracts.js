@@ -318,6 +318,8 @@ class XwInteracts_RunState extends XwInteractsState {
         Object.defineProperty(this, 'isForceFormat', {
             get: function() {
                 switch (this.scene) {
+                    case 'set':
+                        return true;
                     case 'focusout':
                         return true;
                     case 'watch':
@@ -498,7 +500,7 @@ class XwInteracts {
                     }
                 },
                 set: function(value) {
-                    const state = new XwInteracts_RunState(_d.currentEventScene, _d.currentEventData);
+                    const state = new XwInteracts_RunState('set', _d.currentEventData);
                     const formatted = desc.onFormat(value, state);
                     desc.controlSet(_control, formatted);
                     watchNotify(_d, _name, value);
