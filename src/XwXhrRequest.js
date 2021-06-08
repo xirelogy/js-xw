@@ -27,6 +27,20 @@ const METHOD_GET = 'get';
  */
 const METHOD_POST = 'post';
 
+/**
+ * The HTTP PUT method
+ * @type {string}
+ * @private
+ */
+const METHOD_PUT = 'put';
+
+/**
+ * The HTTP DELETE method
+ * @type {string}
+ * @private
+ */
+const METHOD_DELETE = 'delete';
+
 
 /**
  * @typedef XwXhrRequest_Data
@@ -163,7 +177,8 @@ class XwXhrRequest {
             // Process the data
             switch (this.method) {
                 case METHOD_GET:
-                    // HTTP/GET request, data is translated to queries
+                case METHOD_DELETE:
+                    // HTTP/GET and HTTP/DELETE requests: data is translated to queries
                     if (this.data !== null) {
                         if (typeof this.data !== 'object') throw new XwInvalidDataError();
 
@@ -187,6 +202,8 @@ class XwXhrRequest {
                     break;
 
                 case METHOD_POST:
+                case METHOD_PUT:
+                    // HTTP/POST and HTTP/PUT: handle like its content type
                     xhr.open(this.method, _url, true);
                     if (this.data !== null) {
                         if (this.data instanceof XwXhrPostContent) {
