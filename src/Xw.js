@@ -353,7 +353,7 @@ class Xw {
             }
 
             document.body.appendChild(scriptElement);
-        })
+        });
     }
 
 
