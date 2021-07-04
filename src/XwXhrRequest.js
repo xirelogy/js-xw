@@ -215,7 +215,7 @@ class XwXhrRequest {
                             payload = new FormData();
                             for (const key in this.data) {
                                 if (!this.data.hasOwnProperty(key)) continue;
-                                payload.set(key, this.data[key]);
+                                payload.append(key, this.data[key]);
                             }
                         }
                     }
