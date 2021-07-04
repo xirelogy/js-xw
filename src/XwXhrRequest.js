@@ -28,6 +28,13 @@ const METHOD_GET = 'get';
 const METHOD_POST = 'post';
 
 /**
+ * The HTTP PATCH method
+ * @type {string}
+ * @private
+ */
+const METHOD_PATCH = 'patch';
+
+/**
  * The HTTP PUT method
  * @type {string}
  * @private
@@ -40,6 +47,13 @@ const METHOD_PUT = 'put';
  * @private
  */
 const METHOD_DELETE = 'delete';
+
+/**
+ * The HTTP HEAD method
+ * @type {string}
+ * @private
+ */
+const METHOD_HEAD = 'head';
 
 
 /**
@@ -177,8 +191,9 @@ class XwXhrRequest {
             // Process the data
             switch (this.method) {
                 case METHOD_GET:
+                case METHOD_HEAD:
                 case METHOD_DELETE:
-                    // HTTP/GET and HTTP/DELETE requests: data is translated to queries
+                    // HTTP/GET, HTTP/HEAD and HTTP/DELETE requests: data is translated to queries
                     if (this.data !== null) {
                         if (typeof this.data !== 'object') throw new XwInvalidDataError();
 
@@ -202,8 +217,9 @@ class XwXhrRequest {
                     break;
 
                 case METHOD_POST:
+                case METHOD_PATCH:
                 case METHOD_PUT:
-                    // HTTP/POST and HTTP/PUT: handle like its content type
+                    // HTTP/POST, HTTP/PATCH and HTTP/PUT: handle like its content type
                     xhr.open(this.method, _url, true);
                     if (this.data !== null) {
                         if (this.data instanceof XwXhrPostContent) {
