@@ -108,7 +108,6 @@ class XwPrefixedPersistable extends XwPersistable {
      */
     delete(key) {
         const _key = xw.requires(key);
-        const _altDefault = xw.defaultable(altDefault, null);
 
         /**
          * @type {XwPrefixedPersistable_Data}
