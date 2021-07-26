@@ -340,14 +340,12 @@ class Xw {
                 resolve();
             }
             scriptElement.onerror = (ev) => {
-                delete window[_callbackName];
                 reject(new Error(_l('Error while loading the javascript')));
             };
 
             // Handle timeout
             if (_optionsTimeoutMs > 0) {
                 setTimeout(() => {
-                    delete window[_callbackName];
                     reject(new XwTimeoutError());
                 }, _optionsTimeoutMs);
             }
