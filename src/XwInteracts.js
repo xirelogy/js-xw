@@ -94,47 +94,82 @@ function defaultControlListen(control, listener) {
 
 
 /**
- * Default value getter
+ * Binded value getter
  * @param {HTMLElement} control Target control
+ * @param {string} prop Property name
  * @return {*}
  */
-function defaultControlGet(control) {
-
+function bindControlGet(control, prop) {
     if (control === null) return null;
-
-    if (control instanceof HTMLInputElement && control.type === 'checkbox') {
-        return control.checked;
-    }
-
-    if (control instanceof HTMLInputElement ||
-        control instanceof HTMLSelectElement ||
-        control instanceof HTMLTextAreaElement) {
-        return control.value;
-    }
-
-    return null;
+    return xw.defaultable(control[prop], null);
 }
 
 
 /**
- * Default value setter
+ * Binded value setter
  * @param {HTMLElement} control Target control
+ * @param {string} prop Property name
  * @param {*} value Value to be set
  */
-function defaultControlSet(control, value) {
-
+function bindControlSet(control, prop, value) {
     if (control === null) return;
+    control[prop] = value;
+}
+
+
+/**
+ * Default value get/set binder
+ * @param {HTMLElement} control Target control
+ * @return {string}
+ */
+function defaultControlBind(control) {
+    if (control === null) return '';
+
+    if ('xwInteractsBind' in control.dataset) {
+        return control.dataset['xwInteractsBind'];
+    }
 
     if (control instanceof HTMLInputElement && control.type === 'checkbox') {
-        control.checked = value;
-        return;
+        return 'checked';
     }
 
     if (control instanceof HTMLInputElement ||
         control instanceof HTMLSelectElement ||
         control instanceof HTMLTextAreaElement) {
-        control.value = value;
+        return 'value';
     }
+
+    if ('value' in control) {
+        return 'value';
+    }
+
+    throw new XwUnsupportedError();
+}
+
+
+/**
+ * Create value getter
+ * @param {string|null} bindProp
+ * @return {function(HTMLElement):*}
+ */
+function createControlGet(bindProp) {
+    return (control) => {
+        const prop = bindProp || defaultControlBind(control);
+        return bindControlGet(control, prop);
+    };
+}
+
+
+/**
+ * Create value setter
+ * @param {string|null} bindProp
+ * @return {function(HTMLElement, *):void}
+ */
+function createControlSet(bindProp) {
+    return (control, value) => {
+        const prop = bindProp || defaultControlBind(control);
+        return bindControlSet(control, prop, value);
+    };
 }
 
 
@@ -415,6 +450,7 @@ class XwInteracts {
      * @param {function(*,XwInteractsState):*} [options.onFormat] Format function
      * @param {XwInteractsCodec} [options.codec] Codec providing validation/format (overrides onValidate/onFormat)
      * @param {function(HTMLElement,XwInteractsListener)} [options.controlListen] Listener subscriber for given control
+     * @param {string} [options.controlBind] Property name to bind get/set value
      * @param {function(HTMLElement):*} [options.controlGet] Get value from given control
      * @param {function(HTMLElement,*)} [options.controlSet] Set value into given control
      * @param {string|string[]} [options.watch] Variable/variable(s) to be watched for triggering recalculation
@@ -428,8 +464,9 @@ class XwInteracts {
         let _onFormat = xw.defaultable(_options.onFormat, defaultFormatImpl);
         const _codec = xw.defaultable(_options.codec);
         const _controlListen = xw.defaultable(_options.controlListen, defaultControlListen);
-        const _controlGet = xw.defaultable(_options.controlGet, defaultControlGet);
-        const _controlSet = xw.defaultable(_options.controlSet, defaultControlSet);
+        const _controlBind = xw.defaultable(_options.controlBind, null);
+        const _controlGet = xw.defaultable(_options.controlGet, createControlGet(_controlBind));
+        const _controlSet = xw.defaultable(_options.controlSet, createControlSet(_controlBind));
         const _watches = getWatches(xw.defaultable(_options.watch));
         const _kind = xw.defaultable(_options.kind, KIND_CONTROL);  // Hidden options
 
