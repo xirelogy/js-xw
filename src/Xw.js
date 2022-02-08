@@ -391,7 +391,12 @@ class Xw {
             }
 
             const _parsedSrc = new URL(_src, window.location.origin);
-            _parsedSrc.searchParams.append(_optionsCallbackArg, _callbackName);
+            if (_parsedSrc.searchParams) {
+                _parsedSrc.searchParams.append(_optionsCallbackArg, _callbackName);
+            } else {
+                _parsedSrc.search += (_parsedSrc.length > 0) ? '&' : '?';
+                _parsedSrc.search += encodeURIComponent(_optionsCallbackArg) + '=' + encodeURIComponent(_callbackName);
+            }
 
             const scriptElement = document.createElement('script');
             scriptElement.type = 'text/javascript';
