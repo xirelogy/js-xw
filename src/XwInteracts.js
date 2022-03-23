@@ -606,6 +606,33 @@ class XwInteracts {
 
 
     /**
+     * Bind a calculated control to a button
+     * @param {string|null} name Variable name for the control, if any
+     * @param {function():HTMLElement|null} selectorFormula Calculation formula for selector
+     * @param {HTMLElement} buttonElement Target button element
+     * @param {object} [options] Binding options
+     * @param {string|string[]} [options.watch] Variable/variable(s) to be watched for triggering recalculation
+     */
+    bindCalculateButton(name, selectorFormula, buttonElement, options) {
+        const _name = xw.requires(name);
+        const _selectorFormula = xw.requires(selectorFormula);
+        const _buttonElement = xw.requires(buttonElement);
+        const _options = xw.defaultable(options, {});
+
+        const _formula = () => {
+            return selectorFormula() === null;
+        }
+
+        this.bindCalculate(_name, _formula, {
+            ..._options,
+            onCalculate: (value) => {
+                _buttonElement.disabled = !value;
+            },
+        });
+    }
+
+
+    /**
      * Subscribe to notification that validation had completed
      * @param {function(HTMLElement|null,Error|null):void} fn
      */
@@ -634,6 +661,42 @@ class XwInteracts {
         // Also automatically focus
         axw.fork(() => {
             const nextControl = fn(null);
+            if (nextControl !== null) nextControl.focus();
+        });
+    }
+
+
+    /**
+     * Enable helper to process the 'enter' key as an inteligent tab shortcut, automatically binding
+     * with a submission button
+     * @param {function():HTMLElement|null} selectorFormula Calculation formula for selector
+     * @param {HTMLElement} buttonElement Target button element
+     */
+    enableEnterHelperForButton(selectorFormula, buttonElement) {
+        const _selectorFormula = xw.requires(selectorFormula);
+        const _buttonElement = xw.requires(buttonElement);
+
+        /**
+         * @type {XwInteracts_Data}
+         * @private
+         */
+        const _d = _p.access(this);
+        _d.onEnter = (elem) => {
+            const selector = _selectorFormula();
+            if (selector !== null) return selector;
+
+            document.activeElement?.blur();
+
+            axw.fork(() => {
+                _buttonElement.click();
+            });
+
+            return null;
+        };
+
+        // Also automatically focus
+        axw.fork(() => {
+            const nextControl = _selectorFormula();
             if (nextControl !== null) nextControl.focus();
         });
     }
