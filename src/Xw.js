@@ -176,6 +176,7 @@ class Xw {
      * @param {string} base The base path of the URL
      * @param {object} [queries] Queries to the URL
      * @param {string} [bookmark] Bookmark of the URL
+     * @return {string}
      */
     buildUrl(base, queries, bookmark) {
         let ret = base;
