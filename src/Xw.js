@@ -211,6 +211,49 @@ class Xw {
 
 
     /**
+     * Get queries argument from address bar or specific search string
+     * @param {string} [search] Specific search string
+     * @return {object}
+     */
+    getQueries(search) {
+        // Get the specific search string and discard any '?'
+        const url = xw.defaultable(search, window.location.search);
+        let queryString = url.indexOf('?') >= 0 ? url.split('?')[1] : url;
+
+        // Drop bookmarks
+        queryString = queryString.split('#')[0];
+
+        const ret = {};
+
+        for (const block of queryString.split('&')) {
+            const kv = block.split('=');
+            const key = decodeURIComponent(kv[0]);
+            const value = decodeURIComponent(xw.defaultable(kv[1]));
+
+            if (key.match(/\[(\d+)?\]$/)) {
+                // Indexed key
+                const arrKey = key.replace(/\[(\d+)?\]/, '');
+                if (!xw.isDefined(ret[arrKey])) ret[arrKey] = [];
+
+                if (key.match(/\[\d+\]$/)) {
+                    // Indexed array
+                    const index = /\[(\d+)\]/.exec(key)[1];
+                    ret[arrKey][index] = value;
+                } else {
+                    // Simply push back
+                    ret[arrKey].push(value);
+                }
+            } else {
+                // Simple key
+                ret[key] = value;
+            }
+        }
+
+        return ret;
+    }
+
+
+    /**
      * Cause an error for function not implemented
      * @throws Error
      */
