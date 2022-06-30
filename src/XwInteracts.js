@@ -685,7 +685,7 @@ class XwInteracts {
             const selector = _selectorFormula();
             if (selector !== null) return selector;
 
-            document.activeElement?.blur();
+            if (document.activeElement) document.activeElement.blur();
 
             axw.fork(() => {
                 _buttonElement.click();
